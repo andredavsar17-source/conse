@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>AutoElite | Concesionario</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url("https://images.unsplash.com/photo-1503376780353-7e6692767b70");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+header h1 {
+    font-size: 3rem;
+}
+header p {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+/* NAV */
+nav {
+    background: #0f172a;
+    padding: 15px;
+    text-align: center;
+}
+nav a {
+    color: white;
+    margin: 0 20px;
+    text-decoration: none;
+    font-weight: 500;
+}
+nav a:hover {
+    color: #38bdf8;
+}
+
+/* SECCIONES */
+section {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* AUTOS */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+    text-align: center;
+}
+
+.price {
+    color: #2563eb;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.btn:hover {
+    background: #1e40af;
+}
+
+/* CARRITO */
+.carrito {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.carrito ul {
+    list-style: none;
+    margin-bottom: 15px;
+}
+
+.carrito li {
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* BOTON ELIMINAR */
+.remove {
+    color: red;
+    cursor: pointer;
+}
+
+/* FOOTER */
+footer {
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>AutoElite</h1>
+    <p>Elegancia, potencia y confianza en cada vehículo</p>
+</header>
+
+<nav>
+    <a href="#autos">Autos</a>
+    <a href="#carrito">Carrito</a>
+    <a href="#contacto">Contacto</a>
+</nav>
+
+<section id="autos">
+    <h2>Autos Destacados</h2>
+
+    <div class="grid">
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1549924231-f129b911e442">
+            <div class="card-body">
+                <h3>Toyota Corolla</h3>
+                <p class="price">$20,000</p>
+                <button class="btn" onclick="add('Toyota Corolla',20000)">Agregar</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c">
+            <div class="card-body">
+                <h3>Honda Civic</h3>
+                <p class="price">$22,000</p>
+                <button class="btn" onclick="add('Honda Civic',22000)">Agregar</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70">
+            <div class="card-body">
+                <h3>Ford Mustang</h3>
+                <p class="price">$35,000</p>
+                <button class="btn" onclick="add('Ford Mustang',35000)">Agregar</button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section id="carrito">
+    <h2>Carrito de Compras</h2>
+
+    <div class="carrito">
+        <ul id="lista"></ul>
+        <h3>Total: $<span id="total">0</span></h3>
+    </div>
+</section>
+
+<section id="contacto">
+    <h2>Contacto</h2>
+    <p>Email: ventas@autoelite.com</p>
+    <p>Tel: +57 300 123 4567</p>
+</section>
+
+<footer>
+    <p>© 2026 AutoElite</p>
+</footer>
+
+<script>
+let carrito = [];
+let total = 0;
+
+function add(nombre, precio) {
+    carrito.push({nombre, precio});
+    total += precio;
+    render();
+}
+
+function remove(index) {
+    total -= carrito[index].precio;
+    carrito.splice(index,1);
+    render();
+}
+
+function render() {
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    carrito.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            ${item.nombre} - $${item.precio}
+            <span class="remove" onclick="remove(${index})">❌</span>
+        `;
+        lista.appendChild(li);
+    });
+
+    document.getElementById("total").textContent = total;
+}
+</script>
+
+</body>
+</html>
+
+<section id="nosotros">
+    <h2>Sobre AutoElite</h2>
+    <p>
+        En AutoElite contamos con más de 10 años de experiencia en la venta de vehículos nuevos y usados.
+        Nuestro objetivo es ofrecer una experiencia transparente, segura y confiable para cada cliente.
+    </p>
+
+    <p>
+        Sabemos que comprar un auto es una decisión importante, por eso brindamos asesoría personalizada,
+        historial completo de cada vehículo y acompañamiento durante todo el proceso.
+    </p>
+
+    <ul>
+        <li>✔ Vehículos certificados</li>
+        <li>✔ Financiamiento flexible</li>
+        <li>✔ Garantía en autos seleccionados</li>
+        <li>✔ Atención personalizada</li>
+    </ul>
+</section>
+
+
+<section id="reseñas">
+    <h2>⭐ Opiniones de nuestros clientes</h2>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="card-body">
+                <h3>Juan Pérez</h3>
+                <p>⭐⭐⭐⭐⭐</p>
+                <p>"Excelente atención, me explicaron todo sin presión y el carro estaba en perfecto estado."</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h3>Laura Gómez</h3>
+                <p>⭐⭐⭐⭐</p>
+                <p>"Muy buena experiencia, aunque el proceso tardó un poco, valió la pena."</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h3>Carlos Ramírez</h3>
+                <p>⭐⭐⭐⭐⭐</p>
+                <p>"Transparencia total, me mostraron el historial del vehículo. Muy recomendados."</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+#reseñas {
+    background: #e2e8f0;
+}
+
+#reseñas .card {
+    background: white;
+}
+
+<p style="text-align:center; margin-top:20px; font-size:14px;">
+    Basado en experiencias reales de clientes del sector automotriz
+</p>
